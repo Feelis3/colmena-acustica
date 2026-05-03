@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Server-side artifacts (no longer used, history is in localStorage)
+web/uploads/
+web/meta/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Claude Code
+.claude/

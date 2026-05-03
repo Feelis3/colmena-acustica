@@ -1,0 +1,11 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+fastapi
+uvicorn[standard]
+python-multipart
+keras>=3.5
+torch==2.4.1+cpu
+numpy<2.2
+librosa>=0.10
+soundfile
+imageio-ffmpeg
