@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0805">
+<title>panal · análisis acústico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Syne:wght@500;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/v2.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hex" viewBox="0 0 100 86.6">
+      <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3"/>
+    </symbol>
+    <!-- bee with anatomy -->
+    <symbol id="bee" viewBox="0 0 80 60">
+      <!-- wings -->
+      <ellipse cx="28" cy="18" rx="16" ry="9" fill="#fff" opacity=".55"/>
+      <ellipse cx="48" cy="18" rx="16" ry="9" fill="#fff" opacity=".55"/>
+      <ellipse cx="28" cy="18" rx="16" ry="9" fill="none" stroke="rgba(255,255,255,.25)"/>
+      <ellipse cx="48" cy="18" rx="16" ry="9" fill="none" stroke="rgba(255,255,255,.25)"/>
+      <!-- body -->
+      <ellipse cx="40" cy="38" rx="22" ry="14" fill="#f5b023"/>
+      <!-- stripes -->
+      <path d="M28 30 Q40 26 52 30 L52 34 Q40 30 28 34 Z" fill="#0a0805"/>
+      <path d="M28 40 Q40 36 52 40 L52 44 Q40 40 28 44 Z" fill="#0a0805"/>
+      <!-- head -->
+      <circle cx="60" cy="36" r="9" fill="#0a0805"/>
+      <circle cx="62" cy="34" r="2" fill="#f5b023"/>
+      <!-- antennae -->
+      <path d="M58 28 Q56 22 58 18" stroke="#0a0805" stroke-width="1.4" fill="none"/>
+      <path d="M62 28 Q64 22 62 18" stroke="#0a0805" stroke-width="1.4" fill="none"/>
+      <!-- stinger -->
+      <path d="M18 38 L12 38 L18 42 Z" fill="#0a0805"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- LIVE HONEYCOMB BACKDROP -->
+<canvas id="comb" class="comb"></canvas>
+
+<!-- floating bees -->
+<div class="swarm" aria-hidden="true">
+  <svg class="bee b1"><use href="#bee"/></svg>
+  <svg class="bee b2"><use href="#bee"/></svg>
+  <svg class="bee b3"><use href="#bee"/></svg>
+</div>
+
+<main>
+
+  <!-- title block, asymmetric -->
+  <header class="title">
+    <h1>
+      <span class="line">¿hay <em>reina</em></span>
+      <span class="line">en la <em>colmena</em>?</span>
+    </h1>
+  </header>
+
+  <!-- mode switch -->
+  <div class="modeswitch" role="tablist">
+    <button class="mode on" data-tab="record" role="tab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+      <span>grabar en vivo</span>
+    </button>
+    <button class="mode" data-tab="upload" role="tab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span>subir archivo</span>
+    </button>
+  </div>
+
+  <!-- the central hexagon -->
+  <section class="core" id="core">
+
+    <div class="hexstage">
+      <svg class="hex-frame" viewBox="0 0 200 173.2">
+        <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6"
+                 fill="none" stroke="rgba(245,176,35,.20)" stroke-width="1.5"/>
+      </svg>
+      <svg class="hex-frame outer" viewBox="0 0 200 173.2">
+        <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6"
+                 fill="none" stroke="rgba(245,176,35,.08)" stroke-width="1"/>
+      </svg>
+
+      <button id="recBtn" class="hex-btn" aria-label="grabar">
+        <svg viewBox="0 0 200 173.2" class="hex-fill-svg">
+          <defs>
+            <clipPath id="hexClip">
+              <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6"/>
+            </clipPath>
+            <linearGradient id="honeyGrad" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#b87a08"/>
+              <stop offset="50%" stop-color="#f5b023"/>
+              <stop offset="100%" stop-color="#ffd267"/>
+            </linearGradient>
+          </defs>
+          <g clip-path="url(#hexClip)">
+            <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6" fill="#15110b"/>
+            <rect id="honeyLevel" x="0" y="173.2" width="200" height="173.2" fill="url(#honeyGrad)"/>
+            <path id="honeyWave" d="" fill="url(#honeyGrad)" opacity=".9"/>
+          </g>
+          <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6"
+                   fill="none" stroke="rgba(245,176,35,.6)" stroke-width="1.5"/>
+        </svg>
+        <div class="hex-content">
+          <svg id="hexIcon" class="hex-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/>
+          </svg>
+          <span id="hexLabel" class="hex-label">pulsar para grabar</span>
+        </div>
+      </button>
+
+      <label class="drop-overlay" for="fileInput" id="dropOverlay" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>arrastra o pulsa para elegir</span>
+      </label>
+      <input id="fileInput" type="file" accept="audio/*" hidden>
+    </div>
+
+    <!-- below hex info -->
+    <div class="hex-meta">
+      <span class="time" id="recTime">00:00</span>
+      <span class="state" id="recState">listo · pulsa el panal</span>
+    </div>
+
+    <audio id="recAudio" controls hidden></audio>
+    <div class="actions" id="recActions" hidden>
+      <button id="sendRecBtn" class="cta">analizar audio →</button>
+      <button id="resetRecBtn" class="ghost">descartar</button>
+    </div>
+
+  </section>
+
+  <!-- VERDICT -->
+  <section id="verdict" class="verdict" hidden>
+    <div class="verdict-grid">
+      <!-- big confidence hex -->
+      <div class="conf-hex">
+        <svg viewBox="0 0 200 173.2">
+          <defs>
+            <clipPath id="confClip">
+              <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6"/>
+            </clipPath>
+          </defs>
+          <g clip-path="url(#confClip)">
+            <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6" fill="#15110b"/>
+            <rect id="confFill" x="0" y="173.2" width="200" height="173.2" fill="url(#honeyGrad)"/>
+          </g>
+          <polygon points="50,0 150,0 200,86.6 150,173.2 50,173.2 0,86.6"
+                   fill="none" stroke="rgba(245,176,35,.5)" stroke-width="1.5"/>
+        </svg>
+        <div class="conf-num"><b id="confPct">0</b><span>%</span></div>
+      </div>
+
+      <div class="verdict-text">
+        <span class="kicker"><span></span>veredicto</span>
+        <h2 id="verdictName">—</h2>
+        <div class="probs" id="probs"></div>
+        <button id="newBtn" class="ghost">↻ nuevo análisis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORY as honeycomb strip -->
+  <section class="history">
+    <div class="history-head">
+      <span class="kicker"><span></span>celdas analizadas</span>
+      <button id="clearHist" class="ghost">limpiar</button>
+    </div>
+    <div id="histStrip" class="strip"></div>
+  </section>
+
+</main>
+
+<!-- loading overlay -->
+<div id="loading" class="loading" hidden>
+  <svg class="spin-hex" viewBox="0 0 100 86.6"><use href="#hex"/></svg>
+  <span id="loadMsg">analizando zumbido</span>
+  <span id="loadElapsed" class="load-elapsed">0.0 s</span>
+  <button id="cancelBtn" class="ghost">cancelar</button>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="/static/v2.js"></script>
+</body>
+</html>

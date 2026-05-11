@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f0d0a">
+<title>Clasificador de sonidos de colmena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <pattern id="combPattern" x="0" y="0" width="56" height="48.5" patternUnits="userSpaceOnUse">
+      <polygon points="14,0 42,0 56,24.25 42,48.5 14,48.5 0,24.25"
+               fill="none" stroke="rgba(245,176,35,0.10)" stroke-width="1"/>
+    </pattern>
+    <symbol id="hex" viewBox="0 0 100 86.6">
+      <polygon points="25,0 75,0 100,43.3 75,86.6 25,86.6 0,43.3"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="bg-comb" aria-hidden="true">
+  <svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#combPattern)"/></svg>
+</div>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 100 86.6"><use href="#hex"/></svg>
+    <div class="brand-text">
+      <span class="brand-title">Clasificador acústico de colmenas</span>
+      <span class="brand-sub">CRNN · Mel-espectrograma · 4 clases</span>
+    </div>
+  </div>
+  <nav class="nav-links">
+    <a href="#capture">Captura</a>
+    <a href="#library">Resultados</a>
+    <a href="#info">Modelo</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-tag">Trabajo de fin de proyecto · análisis de audio</div>
+    <h1>Detección del estado de la <em>reina</em> a partir del sonido de la colmena.</h1>
+    <p class="hero-sub">
+      Sube una grabación o captura audio en directo. El modelo extrae el Mel-espectrograma (60 s, 22 050 Hz, 128 bandas)
+      y devuelve la probabilidad para cada una de las cuatro clases del dataset.
+    </p>
+    <div class="hero-meta">
+      <div><b id="statCount">0</b><span>archivos analizados</span></div>
+      <div><b>4</b><span>clases</span></div>
+      <div><b>22.05 kHz</b><span>frecuencia de muestreo</span></div>
+      <div><b>60 s</b><span>ventana</span></div>
+    </div>
+  </section>
+
+  <section id="capture" class="grid">
+
+    <article class="card card-record">
+      <header class="card-head">
+        <span class="kicker">01 · captura en vivo</span>
+        <h2>Grabar audio</h2>
+      </header>
+
+      <div class="recorder">
+        <div class="hex-wrap" id="hexWrap">
+          <svg class="hex-shape" viewBox="0 0 100 86.6"><use href="#hex"/></svg>
+          <button id="recBtn" class="rec-btn" aria-label="Grabar">
+            <span class="rec-icon"></span>
+          </button>
+          <div class="rec-rings"><span></span><span></span><span></span></div>
+        </div>
+
+        <canvas id="viz" width="600" height="80"></canvas>
+
+        <div class="rec-meta">
+          <span id="recTime" class="time">00:00</span>
+          <span id="recState" class="state">listo para grabar</span>
+        </div>
+
+        <div class="rec-actions">
+          <audio id="recAudio" controls hidden></audio>
+          <button id="sendRecBtn" class="btn primary" disabled>Analizar grabación</button>
+          <button id="resetRecBtn" class="btn ghost" disabled>Descartar</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card card-upload">
+      <header class="card-head">
+        <span class="kicker">02 · subir archivo</span>
+        <h2>Cargar audio</h2>
+      </header>
+
+      <label id="dropZone" class="drop" for="fileInput">
+        <svg class="drop-hex" viewBox="0 0 100 86.6"><use href="#hex"/></svg>
+        <div class="drop-inner">
+          <div class="drop-title">Arrastra un audio aquí</div>
+          <div class="drop-sub">o pulsa para seleccionar · wav · mp3 · ogg · m4a · webm · flac</div>
+        </div>
+        <input id="fileInput" type="file" accept="audio/*" hidden>
+      </label>
+
+      <div id="uploadProgress" class="upload-progress" hidden>
+        <div class="bar"><span id="bar"></span></div>
+        <div id="upMsg" class="up-msg"></div>
+      </div>
+
+      <div id="lastResult" class="result" hidden>
+        <div class="result-head">
+          <span class="kicker">predicción</span>
+          <span class="result-class" id="resClass"></span>
+        </div>
+        <div class="result-conf">
+          confianza: <b id="resConf"></b> · ventanas: <span id="resWin"></span> · duración: <span id="resDur"></span> s
+        </div>
+        <div class="probs" id="resProbs"></div>
+      </div>
+    </article>
+  </section>
+
+  <section id="library" class="library">
+    <div class="lib-head">
+      <span class="kicker">03 · histórico</span>
+      <h2>Audios analizados</h2>
+      <button id="refresh" class="btn ghost small">Actualizar</button>
+    </div>
+    <div id="fileList" class="files"></div>
+    <div id="emptyState" class="empty" hidden>
+      <svg viewBox="0 0 100 86.6" class="empty-hex"><use href="#hex"/></svg>
+      <p>Aún no se ha analizado ningún audio.</p>
+    </div>
+  </section>
+
+  <section id="info" class="info">
+    <span class="kicker">cómo predice el modelo</span>
+    <h2>Pipeline de inferencia</h2>
+    <ol>
+      <li><b>Decodificación.</b> El audio (cualquier formato) se convierte a WAV mono a 22 050 Hz con FFmpeg.</li>
+      <li><b>Mel-espectrograma.</b> <code>n_fft = 2048</code>, <code>hop = 512</code>, <code>n_mels = 128</code> → matriz <code>(128, T)</code> en escala dB respecto al máximo.</li>
+      <li><b>Normalización.</b> z-score por espectrograma (media 0, desviación 1) y truncado/padded a <code>T = 2584</code> frames (≈ 60 s).</li>
+      <li><b>Ventanas.</b> Si la grabación dura más de 60 s, se trocea en ventanas no solapadas y se promedian las probabilidades.</li>
+      <li><b>CRNN.</b> Conv1D ×2 (extracción local) → BiLSTM ×2 (contexto temporal) → Dense softmax sobre las 4 clases.</li>
+      <li><b>Salida.</b> Vector de probabilidades sobre <i>Reina original</i>, <i>Sin reina</i>, <i>Reina nueva rechazada</i>, <i>Reina nueva aceptada</i>.</li>
+    </ol>
+    <div class="info-meta">
+      <span>Dataset: Beehive Sounds (Yang et al.)</span>
+      <span>Arquitectura: Conv1D + BiLSTM (681 230 params)</span>
+      <span>Backend: Keras 3 / PyTorch</span>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>Proyecto académico · clasificación de bioacústica apícola</span>
+  <span>FastAPI · Keras · librosa</span>
+</footer>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>

@@ -272,14 +272,23 @@ Se ha construido un sistema completo *de la idea al despliegue*: EDA → preproc
 
 ```
 ENTREGA/
-├── MEMORIA.md                       ← este documento
+├── MEMORIA.docx                     ← documento principal del proyecto (Word)
+├── MEMORIA.md                       ← fuente editable de la memoria
 ├── README.md                        ← guía rápida y enlaces
+├── INSTRUCCIONES.md                 ← cómo descargar datos, ejecutar notebooks y desplegar la web
+├── descargar_datos.py               ← descarga el dataset Beehive Sounds desde Kaggle
+├── organizar_audios_test.py         ← ordena el conjunto de validación en carpetas por clase
 ├── modelo_crnn.keras                ← modelo entrenado (~2.6 MB)
-├── organizar_audios_test.py         ← script: organiza el conjunto de validación en carpetas por clase
+├── requirements.txt                 ← dependencias (notebooks + web)
+├── Procfile / nixpacks.toml / railway.json   ← despliegue en Railway
 ├── notebooks/
 │   ├── 01_eda.ipynb                 ← análisis exploratorio
 │   ├── 02_preprocesamiento.ipynb    ← mel-espectrogramas + splits GroupKFold
 │   └── 03_entrenamiento_crnn.ipynb  ← arquitectura, entrenamiento, evaluación
+├── web/                             ← aplicación FastAPI completa
+│   ├── main.py · predict.py
+│   ├── templates/  (index.html, index_v2.html)
+│   └── static/     (script.js, style.css, v2.css, v2.js)
 └── audios_prueba/
     ├── README.md
     ├── controles_no_colmena/        ← 5 audios que la app debe rechazar (ruido, silencio, tonos, barrido)
