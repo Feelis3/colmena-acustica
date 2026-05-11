@@ -55,10 +55,10 @@ def segmento_a_original(nombre_segmento: str) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description="Organiza el conjunto de validación en carpetas por clase.")
-    ap.add_argument("--dataset", required=True, type=Path,
-                    help="Ruta a la carpeta del dataset (la que contiene 'all_data_updated.csv' y 'sound_files/').")
-    ap.add_argument("--salida", default=Path("./audios_test"), type=Path,
-                    help="Carpeta de salida.")
+    ap.add_argument("--dataset", default=Path("./data"), type=Path,
+                    help="Carpeta del dataset (con 'all_data_updated.csv' y 'sound_files/'). Por defecto ./data")
+    ap.add_argument("--salida", default=Path("./audios_prueba/test_dataset"), type=Path,
+                    help="Carpeta de salida (por defecto ./audios_prueba/test_dataset).")
     ap.add_argument("--por-clase", default=8, type=int,
                     help="Nº máximo de audios a copiar por clase (pon 100000 para copiarlos todos).")
     ap.add_argument("--mover", action="store_true",

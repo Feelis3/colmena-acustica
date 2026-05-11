@@ -30,3 +30,9 @@ Capitulo_2*.pdf
 
 # Documento personal (no versionar)
 Documento_*.docx
+
+# Dataset Beehive Sounds descargado localmente (NO subir, ~2 GB)
+ENTREGA/data/
+!ENTREGA/data/.gitkeep
+ENTREGA/audios_prueba/test_dataset/*
+!ENTREGA/audios_prueba/test_dataset/.gitkeep

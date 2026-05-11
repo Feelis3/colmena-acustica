@@ -43,7 +43,11 @@ FLATNESS_MAX     = 0.45     # planitud espectral máxima (más alto = ruido de b
 CONFIANZA_MIN    = 0.50     # confianza softmax mínima para aceptar la predicción
 LF_CUTOFF_HZ     = 1500.0   # las abejas concentran su energía por debajo de ~1.5 kHz
 
-MODEL_PATH = Path(__file__).resolve().parent.parent / "modelo_crnn.keras"
+_root = Path(__file__).resolve().parent.parent
+MODEL_PATH = next(
+    (p for p in [_root / "modelo_crnn.keras", _root / "modelos" / "modelo_crnn.keras"] if p.exists()),
+    _root / "modelo_crnn.keras",
+)
 FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 
 _model = None

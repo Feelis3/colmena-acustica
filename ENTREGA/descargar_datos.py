@@ -9,7 +9,7 @@ DATASET = "annajyang/beehive-sounds"
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--salida", default=Path("./datos/beehive-sounds"), type=Path)
+    ap.add_argument("--salida", default=Path("./data"), type=Path)
     args = ap.parse_args()
 
     try:
