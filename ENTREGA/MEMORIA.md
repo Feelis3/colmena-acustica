@@ -275,14 +275,17 @@ ENTREGA/
 ├── MEMORIA.md                       ← este documento
 ├── README.md                        ← guía rápida y enlaces
 ├── modelo_crnn.keras                ← modelo entrenado (~2.6 MB)
+├── organizar_audios_test.py         ← script: organiza el conjunto de validación en carpetas por clase
 ├── notebooks/
 │   ├── 01_eda.ipynb                 ← análisis exploratorio
 │   ├── 02_preprocesamiento.ipynb    ← mel-espectrogramas + splits GroupKFold
 │   └── 03_entrenamiento_crnn.ipynb  ← arquitectura, entrenamiento, evaluación
 └── audios_prueba/
-    ├── README.md                    ← qué predice cada audio
-    ├── control_01..05_*.wav         ← negativos (deben dar "no es colmena")
-    └── demo_colmena_sintetica.wav   ← positivo de demostración
+    ├── README.md
+    ├── controles_no_colmena/        ← 5 audios que la app debe rechazar (ruido, silencio, tonos, barrido)
+    ├── demo_colmena/                ← zumbido sintético realista que la app debe aceptar
+    └── test_dataset/                ← (vacía) se rellena con los audios reales de validación
+                                       vía organizar_audios_test.py
 
 Código fuente completo y despliegue: https://github.com/Feelis3/colmena-acustica
 ```

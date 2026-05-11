@@ -12,7 +12,8 @@ Autor: Marcos · Profesor: Sebastián Rubio Valero · 2026
 | **`MEMORIA.md`** | Memoria técnica completa (problema, EDA, estado del arte, modelo, entrenamiento, evaluación, despliegue, mejoras). Se puede exportar a PDF desde cualquier visor de Markdown. |
 | **`modelo_crnn.keras`** | Modelo CRNN entrenado (Conv1D + BiLSTM, ~227 K parámetros). |
 | **`notebooks/`** | Los tres notebooks del proyecto: `01_eda`, `02_preprocesamiento`, `03_entrenamiento_crnn`. |
-| **`audios_prueba/`** | Audios para probar la aplicación (ver su propio `README.md`). |
+| **`organizar_audios_test.py`** | Script que organiza el conjunto de validación del dataset en carpetas por clase (ver más abajo). |
+| **`audios_prueba/`** | Audios para probar: `controles_no_colmena/` (deben rechazarse), `demo_colmena/` (debe aceptarse) y `test_dataset/` (vacía; se rellena con audios reales vía el script). Ver su `README.md`. |
 
 ## Enlaces
 
@@ -43,9 +44,14 @@ Luego abrir <http://localhost:8000/v2>.
 
 ### Qué probar
 
-1. **Subir un audio real de colmena** (ver `audios_prueba/README.md` para extraer muestras del dataset) → el modelo devuelve uno de los 4 estados de reina con su probabilidad.
-2. **Subir `audios_prueba/demo_colmena_sintetica.wav`** → es aceptado como sonido de colmena y clasificado.
-3. **Subir cualquiera de los `control_0X_*.wav`** (ruido, silencio, tono, barrido) → la app responde **"No reconocido como colmena"** con el motivo, en lugar de inventarse un estado de reina. Esto demuestra el manejo de datos fuera de dominio.
+1. **Audios reales del dataset** — rellena `audios_prueba/test_dataset/` ejecutando:
+   ```bash
+   kaggle datasets download annajyang/beehive-sounds -p ./beehive --unzip
+   python organizar_audios_test.py --dataset ./beehive/versions/3 --salida ./audios_prueba/test_dataset --por-clase 8
+   ```
+   Quedan los segmentos del **conjunto de validación** ordenados en carpetas `0_reina_original/ … 3_reina_nueva_aceptada/`. Sube cualquiera y compara la predicción con el nombre de su carpeta (= clase verdadera).
+2. **`audios_prueba/demo_colmena/demo_colmena_sintetica.wav`** → es aceptado como sonido de colmena y clasificado.
+3. **Cualquiera de `audios_prueba/controles_no_colmena/`** (ruido, silencio, tono, barrido) → la app responde **"No reconocido como colmena"** con el motivo, en lugar de inventarse un estado de reina. Demuestra el manejo de datos fuera de dominio.
 4. **Grabar en directo** desde el navegador (botón "grabar en vivo"), revisar el audio y analizarlo.
 
 ## Resultados (validación, sin fuga de datos)

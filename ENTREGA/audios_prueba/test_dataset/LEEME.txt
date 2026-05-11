@@ -1,0 +1,31 @@
+CONJUNTO DE VALIDACIÓN (audios reales etiquetados)
+===================================================
+
+Esta carpeta está vacía a propósito: los audios del dataset Beehive Sounds
+(Yang et al.) están sujetos a la licencia de Kaggle y no se redistribuyen aquí.
+
+Para rellenarla con los audios reales del conjunto de validación —los mismos
+sobre los que se midieron las métricas de la memoria— ejecuta el script que
+hay en la carpeta superior:
+
+  1) Descarga el dataset (en local o en Colab):
+        kaggle datasets download annajyang/beehive-sounds -p ./beehive --unzip
+
+  2) Ejecuta:
+        python ../organizar_audios_test.py \
+            --dataset ./beehive/versions/3 \
+            --salida  . \
+            --por-clase 8
+
+  Resultado:
+        test_dataset/
+        ├── 0_reina_original/
+        ├── 1_sin_reina/
+        ├── 2_reina_nueva_rechazada/
+        └── 3_reina_nueva_aceptada/
+
+  (cambia --por-clase a un número grande, p. ej. 100000, para copiar TODOS
+   los segmentos de validación en lugar de una muestra).
+
+Cada subcarpeta lleva el nombre de la clase verdadera, así que al subir un
+audio a la aplicación puedes comprobar directamente si la predicción coincide.
