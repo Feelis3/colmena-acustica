@@ -1,6 +1,0 @@
-[phases.setup]
-nixPkgs = ["python311", "ffmpeg"]
-
-[variables]
-KERAS_BACKEND = "torch"
-PYTHONUNBUFFERED = "1"

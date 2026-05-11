@@ -52,23 +52,23 @@ KERAS_BACKEND=torch python -m uvicorn main:app --host 0.0.0.0 --port 8000
 
 ## Deploy en Railway
 
-El repo ya viene listo: `railway.json`, `nixpacks.toml`, `Procfile` y `requirements.txt` en la raíz.
+El repo trae `railway.json`, `Procfile`, `.python-version` y `requirements.txt` en la raíz.
 
 1. New Project → Deploy from GitHub repo
 2. Selecciona este repo
-3. Railway detectará nixpacks y construirá usando Python 3.11 + ffmpeg
+3. Railway construye con Python 3.11 (vía `.python-version`); `railway.json` define el comando de arranque y el healthcheck en `/v2`
 4. La primera build tarda ~5 min (descarga torch CPU + keras + librosa)
-5. Una vez desplegado, asegúrate de que la variable `KERAS_BACKEND=torch` está activa (ya viene en `nixpacks.toml`)
+5. `KERAS_BACKEND=torch` ya queda fijado en el código (`main.py`), no hace falta configurarlo en Railway
 
 El historial de cada análisis se guarda en `localStorage` del navegador, así cada dispositivo tiene el suyo (no hay base de datos).
 
 ## Robustez ante datos fuera de dominio
 
-El modelo solo tiene 4 clases y todas asumen "hay colmena", así que ante ruido, música o voz el `softmax` forzaría una de ellas. Antes de devolver una predicción se calculan características acústicas globales (RMS, fracción de energía bajo 1.5 kHz, planitud espectral, centroide) y se aplican umbrales; si el audio no se parece a una colmena o la confianza es baja, la API responde `es_colmena: false` con el motivo en lugar de inventar un estado de reina. Detalles en `ENTREGA/MEMORIA.md` §6.4.
+El modelo solo tiene 4 clases y todas asumen "hay colmena", así que ante ruido, música o voz el `softmax` forzaría una de ellas. Antes de devolver una predicción se calculan características acústicas globales (RMS, fracción de energía bajo 1.5 kHz, planitud espectral, centroide) y se aplican umbrales; si el audio no se parece a una colmena o la confianza es baja, la API responde `es_colmena: false` con el motivo en lugar de inventar un estado de reina. Detalles en `ENTREGA/MEMORIA.docx` §6.4.
 
 ## Entrega académica
 
-La carpeta `ENTREGA/` contiene el paquete entregable: memoria técnica (`MEMORIA.md`), los tres notebooks, el modelo y audios de prueba (controles negativos + demo positiva). Ver `ENTREGA/README.md`.
+La carpeta `ENTREGA/` contiene el paquete entregable: memoria técnica (`MEMORIA.docx`), los notebooks, el modelo, la app web, el script de descarga del dataset y audios de prueba.
 
 ## Notas
 

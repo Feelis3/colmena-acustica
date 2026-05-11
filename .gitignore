@@ -27,3 +27,6 @@ Thumbs.db
 
 # Documento de la rúbrica (material del profesor, no del proyecto)
 Capitulo_2*.pdf
+
+# Documento personal (no versionar)
+Documento_*.docx
