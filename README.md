@@ -62,8 +62,17 @@ El repo ya viene listo: `railway.json`, `nixpacks.toml`, `Procfile` y `requireme
 
 El historial de cada análisis se guarda en `localStorage` del navegador, así cada dispositivo tiene el suyo (no hay base de datos).
 
+## Robustez ante datos fuera de dominio
+
+El modelo solo tiene 4 clases y todas asumen "hay colmena", así que ante ruido, música o voz el `softmax` forzaría una de ellas. Antes de devolver una predicción se calculan características acústicas globales (RMS, fracción de energía bajo 1.5 kHz, planitud espectral, centroide) y se aplican umbrales; si el audio no se parece a una colmena o la confianza es baja, la API responde `es_colmena: false` con el motivo en lugar de inventar un estado de reina. Detalles en `ENTREGA/MEMORIA.md` §6.4.
+
+## Entrega académica
+
+La carpeta `ENTREGA/` contiene el paquete entregable: memoria técnica (`MEMORIA.md`), los tres notebooks, el modelo y audios de prueba (controles negativos + demo positiva). Ver `ENTREGA/README.md`.
+
 ## Notas
 
 - Dataset: [Beehive Sounds](https://www.kaggle.com/datasets/annajyang/beehive-sounds) (Yang et al.)
 - Backend ML: Keras 3 sobre PyTorch (CPU)
+- Métricas (validación sin fuga): accuracy 0.931 · F1 macro 0.913
 - Tamaño máximo de audio: 50 MB

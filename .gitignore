@@ -24,3 +24,6 @@ Thumbs.db
 
 # Claude Code
 .claude/
+
+# Documento de la rúbrica (material del profesor, no del proyecto)
+Capitulo_2*.pdf

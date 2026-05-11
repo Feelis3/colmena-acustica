@@ -212,6 +212,7 @@ async function uploadAndPredict(file){
 }
 
 function renderResult(r){
+  const ok = r.es_colmena !== false;
   resClass.textContent = r.clase;
   resConf.textContent = fmtPct(r.confianza);
   resWin.textContent = r.ventanas_analizadas;
@@ -219,8 +220,9 @@ function renderResult(r){
 
   const entries = Object.entries(r.probabilidades).sort((a,b)=>b[1]-a[1]);
   const top = entries[0][0];
-  resProbs.innerHTML = entries.map(([name, p]) => `
-    <div class="prob-row ${name===top?'top':''}">
+  const note = r.motivo ? `<p style="margin:0 0 10px;font-size:13px;color:#a89c84">${escapeHtml(r.motivo)}</p>` : '';
+  resProbs.innerHTML = note + entries.map(([name, p]) => `
+    <div class="prob-row ${ok && name===top?'top':''}">
       <span class="label">${escapeHtml(name)}</span>
       <span class="prob-pct">${fmtPct(p)}</span>
       <div class="prob-bar"><span style="width:${(p*100).toFixed(1)}%"></span></div>
@@ -229,14 +231,8 @@ function renderResult(r){
   lastResult.hidden = false;
 }
 
-/* ---------- library ---------- */
-async function loadFiles(){
-  try{
-    const r = await fetch('/api/files');
-    const {files} = await r.json();
-    renderFiles(files);
-  }catch(e){ console.error(e); }
-}
+/* ---------- library (deshabilitada: el histórico vive en localStorage en /v2) ---------- */
+async function loadFiles(){ renderFiles([]); }
 
 function renderFiles(files){
   fileList.innerHTML = '';

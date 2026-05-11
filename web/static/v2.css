@@ -256,6 +256,27 @@ h1 em{
   margin-bottom:24px;
 }
 
+.verdict-note{
+  color:var(--ink);font-size:14px;line-height:1.55;margin-bottom:14px;
+  padding:12px 14px;border-left:2px solid var(--honey);
+  background:rgba(245,176,35,.06);max-width:480px;
+}
+.probs-hdr{
+  font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;
+}
+/* fuera-de-dominio: el veredicto se vuelve neutro/gris */
+.verdict.not-hive .verdict-text h2{
+  background:none;-webkit-text-fill-color:initial;color:var(--ink-soft);
+  font-style:normal;font-size:clamp(28px,4vw,44px);
+}
+.verdict.not-hive .conf-num b{color:var(--ink-soft)}
+.verdict.not-hive .conf-num span{color:var(--ink-soft)}
+.verdict.not-hive #confFill{fill:var(--ink-soft);opacity:.4}
+.verdict.not-hive .verdict-note{border-left-color:#ff5b1f;background:rgba(255,91,31,.07)}
+.verdict.not-hive .probs .p.top{border-bottom-color:rgba(245,176,35,.12)}
+.verdict.not-hive .probs .p .name{color:var(--ink-soft)}
+
 .probs{display:flex;flex-direction:column;gap:6px;margin-bottom:22px;max-width:480px}
 .probs .p{display:grid;grid-template-columns:14px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed rgba(245,176,35,.12);font-size:14px}
 .probs .p .idx{font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-soft)}

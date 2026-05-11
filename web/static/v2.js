@@ -375,19 +375,19 @@ async function analyze(file){
 }
 
 function showVerdict(r){
+  const ok = r.es_colmena !== false;
+  verdict.classList.toggle('not-hive', !ok);
   verdictName.textContent = r.clase;
-  // animate confidence number + fill
-  const target = r.confianza;
+
+  // confidence ring: usa la confianza solo si es colmena; si no, lo dejamos a 0
+  const target = ok ? r.confianza : 0;
   const pct = Math.round(target*100);
-  let cur = 0;
   const startFill = () => {
-    const start = performance.now();
-    const dur = 900;
+    const start = performance.now(); const dur = 900;
     const step = () => {
       const k = Math.min(1, (performance.now()-start)/dur);
       const eased = 1 - Math.pow(1-k, 3);
-      cur = Math.round(eased * pct);
-      confPct.textContent = cur;
+      confPct.textContent = Math.round(eased * pct);
       confFill.setAttribute('y', (173.2 * (1 - eased*target)).toString());
       if(k < 1) requestAnimationFrame(step);
     };
@@ -396,8 +396,12 @@ function showVerdict(r){
 
   const entries = Object.entries(r.probabilidades).sort((a,b)=>b[1]-a[1]);
   const top = entries[0][0];
-  probsEl.innerHTML = entries.map(([name,p],i) => `
-    <div class="p ${name===top?'top':''}">
+  const motivo = r.motivo ? `<p class="verdict-note">${escapeHtml(r.motivo)}</p>` : '';
+  const probsHdr = ok
+    ? '<p class="probs-hdr">distribución de probabilidades</p>'
+    : '<p class="probs-hdr">salida bruta del modelo (descartada — fuera de dominio)</p>';
+  probsEl.innerHTML = motivo + probsHdr + entries.map(([name,p],i) => `
+    <div class="p ${ok && name===top ? 'top':''}">
       <span class="idx">${String(i+1).padStart(2,'0')}</span>
       <span class="name">${escapeHtml(name)}</span>
       <span class="val">${(p*100).toFixed(1)}%</span>
