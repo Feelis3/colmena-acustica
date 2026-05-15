@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from predict import predecir, get_model, CLASES
 
 BASE_DIR = Path(__file__).resolve().parent
-INDEX_HTML = BASE_DIR / "templates" / "index.html"
+INDEX_HTML = BASE_DIR / "templates" / "index_v2.html"
 
 ALLOWED_EXT = {".wav", ".mp3", ".ogg", ".m4a", ".webm", ".flac", ".aac", ".opus"}
 MAX_BYTES = 50 * 1024 * 1024
@@ -29,11 +29,6 @@ def _warmup():
 @app.get("/", response_class=HTMLResponse)
 async def index():
     return FileResponse(INDEX_HTML, media_type="text/html")
-
-
-@app.get("/v2", response_class=HTMLResponse)
-async def index_v2():
-    return FileResponse(BASE_DIR / "templates" / "index_v2.html", media_type="text/html")
 
 
 @app.get("/api/clases")
