@@ -38,7 +38,7 @@ CLASES = {
 # --- umbrales del detector OOD (heurísticos, documentados en la memoria) ---
 RMS_MIN          = 1.5e-3   # por debajo: audio prácticamente en silencio
 LF_RATIO_MIN     = 0.35     # fracción mínima de energía espectral por debajo de 1.5 kHz
-FLATNESS_MIN     = 1e-4     # por debajo: tono sintético puro (ninguna grabación real es así)
+FLATNESS_MIN     = 1e-6     # por debajo: tono sintético puro. El zumbido real de abejas es muy tonal (flatness ~2e-5..2e-4), así que el umbral va bien bajo.
 FLATNESS_MAX     = 0.45     # planitud espectral máxima (más alto = ruido de banda ancha)
 CONFIANZA_MIN    = 0.50     # confianza softmax mínima para aceptar la predicción
 LF_CUTOFF_HZ     = 1500.0   # las abejas concentran su energía por debajo de ~1.5 kHz
