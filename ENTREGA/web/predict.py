@@ -38,7 +38,8 @@ CLASES = {
 # --- umbrales del detector OOD (heurísticos, documentados en la memoria) ---
 RMS_MIN          = 1.5e-3   # por debajo: audio prácticamente en silencio
 LF_RATIO_MIN     = 0.35     # fracción mínima de energía espectral por debajo de 1.5 kHz
-FLATNESS_MIN     = 1e-6     # por debajo: tono sintético puro. El zumbido real de abejas es muy tonal (flatness ~2e-5..2e-4), así que el umbral va bien bajo.
+FLATNESS_MIN     = 5e-6     # por debajo: senoidal sintética. El zumbido real de abejas es muy tonal (~2e-5..2e-4); con 5e-6 dejamos margen para grabaciones tonales y bloqueamos sinusoidales puras.
+CONFIANZA_OVERRIDE_FLATNESS = 0.80  # si el modelo va >=80% seguro, no rechazamos por flatness baja
 FLATNESS_MAX     = 0.45     # planitud espectral máxima (más alto = ruido de banda ancha)
 CONFIANZA_MIN    = 0.50     # confianza softmax mínima para aceptar la predicción
 LF_CUTOFF_HZ     = 1500.0   # las abejas concentran su energía por debajo de ~1.5 kHz
@@ -122,7 +123,7 @@ def _evaluar_dominio(feats: dict, confianza: float) -> tuple[bool, str]:
     if feats["lf_ratio"] < LF_RATIO_MIN:
         return False, ("La energía se concentra en frecuencias altas — suena a música, "
                        "voz o ruido ambiente, no a una colmena.")
-    if feats["flatness"] < FLATNESS_MIN:
+    if feats["flatness"] < FLATNESS_MIN and confianza < CONFIANZA_OVERRIDE_FLATNESS:
         return False, "Es un tono sintético casi puro, no una grabación real de colmena."
     if feats["flatness"] > FLATNESS_MAX:
         return False, "El espectro es plano (tipo ruido de banda ancha), no el zumbido tonal de una colmena."
